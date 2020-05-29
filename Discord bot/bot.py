@@ -3,6 +3,8 @@ import os
 from discord.ext import commands, tasks
 import io
 
+#HELO TEAM
+
 token = 'NzE0ODcwMDU2OTI4MDE4NDY3.Xs08xg.4T9fMeP0x2VlRsahsWm4ilCKTds'
 
 prefix = '='
