@@ -1,7 +1,6 @@
+
 venv
 config.json
-<<<<<<< HEAD
 *.pyo
 *.pyc
-=======
->>>>>>> 1993173533a3e2250453cf4a60c8f460ca1a14bc
+
