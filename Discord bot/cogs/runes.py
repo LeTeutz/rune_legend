@@ -37,10 +37,11 @@ class Runes(commands.Cog):
                 return "n-am gasit"
 
     @commands.command()
-    async def runes(self, ctx, champion):
+    async def runes(self, ctx, champion, role=''):
         c = self.search(champion)
         await ctx.send(f'Loading runes for {c}...', delete_after=0)
         c = Rune(c)
+        await ctx.send(f"imediat pt {champion} ")
         rune_list = c.rune_champ()
         images = img.get_rune_list(rune_list)
         i = img.generate_image(images)
