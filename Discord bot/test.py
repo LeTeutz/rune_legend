@@ -1,14 +1,17 @@
-import rune_interpreter as ri
-import os
+import discord
+from discord.ext import commands
+from bs4 import BeautifulSoup
+import requests
 
-def getimage():
-    primary = 'Inspiration'
-    # primary = list[0][0]
-    # secondary = list[0][1]
-    # name = "glacial_augment"
-    # for filename in listdir(f'./runes/{rune_convertor(primary)}'):
-    #     if filename[:-4] == name:
-    #         print (filename)
-    print (ri.rune_convertor(primary))
 
-getimage()
+base_url = 'https://www.leagueofgraphs.com/summoner/'
+
+region = 'eune'
+user = 'janelu44'
+
+html = requests.get(f'{base_url}{region}/{user}')
+page = BeautifulSoup(html.text, "html.parser")
+
+profile_pic = page.find_all("div", {"class":"img"})
+#profile_pic = profile_pic.find("img")["src"]
+print(profile_pic)
