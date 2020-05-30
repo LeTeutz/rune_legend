@@ -14,6 +14,8 @@ prefix = '='
 
 client = commands.Bot(command_prefix = prefix)
 
+client.remove_command('help')
+
 
 @client.event
 async def on_ready():

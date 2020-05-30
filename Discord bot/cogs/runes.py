@@ -55,7 +55,7 @@ class Runes(commands.Cog):
             image_binary.seek(0)
             print('alo')
             imag = discord.File(fp=image_binary, filename='rune.png')
-            embed = discord.Embed(title=f'Runes for {c.champion}', description=f'Skill order: {c.skill_order()}')
+            embed = discord.Embed(title=f'Runes for {c.champion}', description=f'Skill order: {c.skill_order()}', color=0xffbb00)
             embed.set_thumbnail(url=str(c.get_image()))
             embed.set_image(url='attachment://rune.png')
 
