@@ -9,6 +9,6 @@ def getimage():
     # for filename in listdir(f'./runes/{rune_convertor(primary)}'):
     #     if filename[:-4] == name:
     #         print (filename)
-    print (ri.rune_convertor(primary))
+    #print (ri.rune_convertor(primary))
 
 getimage()

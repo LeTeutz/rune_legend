@@ -3,4 +3,4 @@ venv
 config.json
 *.pyo
 *.pyc
-
+test.py

@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import aiohttp
+import asyncio
 
 base_url = "https://www.op.gg/champion/"
 
@@ -7,6 +9,7 @@ base_url = "https://www.op.gg/champion/"
 class Rune:
 
     def __init__(self, champion, rol = ''):
+
         champion = champion.replace(" ",'')
         page_url = requests.get(f"{base_url}{champion}/statistics/{rol}")
         page_url = BeautifulSoup(page_url.content, "html.parser")
