@@ -30,18 +30,22 @@ class Runes(commands.Cog):
                     number += 1
                     result = name
             if number > 1:
-                return "prea multe variante"
+                return "X"
             elif number == 1:
                 return result
             else:
-                return "n-am gasit"
+                return "0"
 
     @commands.command()
     async def runes(self, ctx, champion, role=''):
         c = self.search(champion)
-        await ctx.send(f'Loading runes for {c}...', delete_after=0)
+        if c == 'X':
+            await ctx.send('Prea multe variante, mai baga litere')
+        elif c == '0':
+            await ctx.send('N-am gasit sa moara Garen...')
+        else:
+            await ctx.send(f'Loading runes for {c}...', delete_after=0)
         c = Rune(c)
-        await ctx.send(f"imediat pt {champion} ")
         rune_list = c.rune_champ()
         images = img.get_rune_list(rune_list)
         i = img.generate_image(images)
