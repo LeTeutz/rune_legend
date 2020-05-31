@@ -4,3 +4,8 @@ config.json
 *.pyo
 *.pyc
 test.py
+championFull.json
+pant.py
+champs.json
+testin_api
+experimental*

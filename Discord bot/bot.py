@@ -19,6 +19,10 @@ client = commands.Bot(command_prefix = prefix)
 async def on_ready():
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name=f'{prefix}help'))
     print('Bot is online')
+    channel = client.get_channel(714890932624818336)
+    await channel.send("Ziua buna voinice")
+
+
 
 @client.command(hidden=True)
 async def load(ctx, extension):
@@ -41,5 +45,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-
-client.run(token)
+try:
+    client.run(token)
+finally:
+    print("aloooooooo")

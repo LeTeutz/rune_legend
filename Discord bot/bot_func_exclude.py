@@ -2,17 +2,34 @@ import requests
 from bs4 import BeautifulSoup
 import aiohttp
 import asyncio
+import time
 
 base_url = "https://www.op.gg/champion/"
 
+#NU STIU CE FACE DAR MERGE NU ATINGE
+class aobject(object):
+    async def __new__(cls, *a, **kw):
+        instance = super().__new__(cls)
+        await instance.__init__(*a,**kw)
+        return instance
 
-class Rune:
+    async def __init__(self):
+        pass
 
-    def __init__(self, champion, rol = ''):
+class Rune(aobject):
 
-        champion = champion.replace(" ",'')
-        page_url = requests.get(f"{base_url}{champion}/statistics/{rol}")
-        page_url = BeautifulSoup(page_url.content, "html.parser")
+    async def __init__(self, champion, rol = ''):
+
+        champion = champion.replace(' ','')
+        url = f'{base_url}{champion}/statistics/{rol}'
+        #EXPERIMENTAL
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                page_url = await response.text()
+
+
+        page_url = BeautifulSoup(page_url, "html.parser")
+
         #pagina de baza
         self.img_url = page_url.find("div",{"class":"champion-stats-header-info__image"})
         self.page_url = page_url.find("div",{"class":"l-champion-statistics-content__main"})
@@ -21,13 +38,25 @@ class Rune:
 
     def skill_order(self):
         SKILLS = []
-        skills = self.page_url.find_all("td", {"class":"champion-overview__data"})[2]
-        skills = skills.find("ul",{"class":"champion-stats__list"})
-        skills = skills.find_all("li", {"class":"champion-stats__list__item tip"})
+        #skills = self.page_url.find_all("td", {"class":"champion-overview__data"})
+        skills = self.page_url.find_all("ul",{"class":"champion-stats__list"})
 
-        for skill in skills:
-            skill = skill.find("span").text
-            SKILLS.append(skill)
+
+        try:
+            #skills = skills[2].find("ul",{"class":"champion-stats__list"})
+            skills_1 = skills[2].find_all("li", {"class":"champion-stats__list__item tip"})
+            for skill in skills_1:
+                skill = skill.find("span").text
+                SKILLS.append(skill)
+
+        except:
+            SKILLS = []
+
+            skills_2 = skills[1].find_all("span")
+            for skill in skills_2:
+
+                SKILLS.append(skill.text)
+
         return f"{SKILLS[0]} > {SKILLS[1]} > {SKILLS[2]}"
 
 
@@ -74,15 +103,29 @@ class Rune:
             except Exception as e:
                 pass
 
-        #asta merge ignorat/scos
-        # for ind,i in enumerate(RUNE):
-        #     while len(i) < 4:
-        #         RUNE[ind].append("")
 
         return RUNE
 
 
+async def main(champ, role):
+    tasks = []
+
+    #async with aiohttp.ClientSession() as session:
+    # for c in ch:
+    #     tasks.append(Rune( c))
+
+    return await Rune(champ, role)
+    # a = await asyncio.gather(Rune(session,ch[0]),
+    # Rune(session, ch[1])
+    # )
+    # print(a[0].skill_order())
 
 if __name__ == "__main__":
-    ya = Rune("amumu")
-    print(ya.rune_champ())
+    t = time.perf_counter()
+    #asyncio.run(m(["amumu", "yasuo", "katarina","ekko","gnar","vayne"]))
+
+    test = asyncio.run(main("ekko","jungle"))
+    print(test.skill_order())
+
+    t2 = time.perf_counter() - t
+    print(f"total time {t2:0.2f}")

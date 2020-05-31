@@ -1,15 +1,18 @@
 import discord
 from discord.ext import commands
 import json
-from bot_func_exclude import Rune
+from bot_func_exclude import main
 import os
 from PIL import Image
 import image_generator as img
 import io
+import time
 
 import image_generator
 
 class Runes(commands.Cog):
+
+    roles = ["jungle", 'jgl', 'jg', 'mid', 'top', 'bot', 'bottom', 'sup', 'support']
 
     def __init__(self, client):
         self.client = client
@@ -37,10 +40,27 @@ class Runes(commands.Cog):
                 return "n-am gasit"
 
     @commands.command()
-    async def runes(self, ctx, champion):
+    async def runes(self, ctx, champion,* ,role = ''):
+        t = time.perf_counter()
         c = self.search(champion)
-        await ctx.send(f'Loading runes for {c}...', delete_after=0)
-        c = Rune(c)
+        print(role)
+        try:
+            if role.split()[-1] in self.roles:
+                print("alo")
+                role = role.split()[-1]
+            else:
+                role = ''
+        except Exception as e:
+            pass
+
+        await ctx.send(f'Loading runes for {c} {role}...', delete_after=3)
+        c = await main(c, role)
+        #print(c)
+
+        t2 = time.perf_counter() - t
+        print(f"total time pt {champion}: {t2:0.2f}")
+
+        #aici
         rune_list = c.rune_champ()
         images = img.get_rune_list(rune_list)
         i = img.generate_image(images)
@@ -48,13 +68,19 @@ class Runes(commands.Cog):
         with io.BytesIO() as image_binary:
             i.save(image_binary, 'PNG')
             image_binary.seek(0)
-            #print('alo')
+
             imag = discord.File(fp=image_binary, filename='rune.png')
-            embed = discord.Embed(title=f'Runes for {c.champion}', description=f'Skill order: {c.skill_order()}')
+            #aici
+            embed = discord.Embed(title=f'Runes for {c.champion} {role}', description=f'Skill order: {c.skill_order()}')
             embed.set_thumbnail(url=str(c.get_image()))
             embed.set_image(url='attachment://rune.png')
 
+            t3 = time.perf_counter() - t
+            print(f"total t3 time pt {champion}: {t3:0.2f}")
             await ctx.send(file=imag, embed=embed)
+
+        t4 = time.perf_counter() - t
+        print(f"total t4 time pt {champion}: {t4:0.2f}")
 
     @commands.command(aliases=['smr'])
     async def _test(self, ctx):
