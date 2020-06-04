@@ -11,25 +11,69 @@ class Stats(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    def get_api(self):
+        with open('config.json', 'r') as f:
+            dict = json.load(f)
+            return dict["api_key"]
+
+
     def region_mod(self, region):
         with open('./data/regions.json', 'r') as reg:
             reg_list = json.load(reg)
             return reg_list[region]
 
-    def create_summoner_card(self):
-        pass
+    def create_summoner_card(self, summoner, thumbnail, ranks):
+
+        embed=discord.Embed(title=f"{summoner['name']}", description=f"Level {summoner['summonerLevel']}", color=0x018aad)
+        embed.set_thumbnail(url=thumbnail)
+
+        flex_rank = 'Unranked'
+        solo_rank = 'Unranked'
+
+        for mode in ranks:
+            try:
+                if mode['queue_type'] == 'RANKED_FLEX_SR':
+                    flex_rank = f"{mode['tier'].title()} {mode['rank']}"
+            except:
+                pass
+
+            try:
+                if mode['queue_type'] == 'RANKED_SOLO_5x5':
+                    solo_rank = f"{mode['tier'].title()} {mode['rank']}"
+            except:
+                pass
+
+        embed.add_field(name="Solo Rank", value=solo_rank, inline=True)
+        embed.add_field(name="Flex Rank", value=flex_rank, inline=True)
+
+        return embed
+
 
     @commands.command()
     async def stats(self, ctx, region, user):
         region = self.region_mod(region)
+        api = self.get_api()
+        watcher = LolWatcher(api)
 
-        api_key = 'RGAPI-7cb4689c-ac1a-4207-a34f-cf5667d574d5'
-        watcher = LolWatcher(api_key)
-        player = watcher.summoner.by_name(region, user)
+        summoner = watcher.summoner.by_name(region, user)
         icons = watcher.data_dragon.profile_icons('10.11.1')
-        thumbnail = self.summoner_icons_url + icons['data'][str(player['profileIconId'])]['image']['full']
-        embed=discord.Embed(title=f"{player['name']}", description="cel mai cel baiet", color=0xff0000)
-        embed.set_thumbnail(url=thumbnail)
+        thumbnail = self.summoner_icons_url + icons['data'][str(summoner['profileIconId'])]['image']['full']
+
+        ranks = [{}, {}]
+
+        r = watcher.league.by_summoner(region, summoner['id'])
+
+        print('alo')
+
+        for i in range(2):
+            try:
+                ranks[i]['queue_type'] = r[i]['queueType']
+                ranks[i]['tier'] = r[i]['tier']
+                ranks[i]['rank'] = r[i]['rank']
+            except:
+                pass
+
+        embed = self.create_summoner_card(summoner, thumbnail, ranks)
         await ctx.send(embed=embed)
 
     @stats.error
