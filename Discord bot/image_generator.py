@@ -50,7 +50,7 @@ def generate_image(images):
 
     image = Image.new('RGBA', size, bg)
 
-    print (images)
+    #print (images)
 
     primary = Image.open(images[0][0])
     keystone = Image.open(images[1][0])
