@@ -4,6 +4,7 @@ config.json
 *.pyo
 *.pyc
 test.py
+<<<<<<< HEAD
 championFull.json
 pant.py
 champs.json
@@ -11,3 +12,5 @@ testin_api
 experimental*
 find_missing.py
 .gitignore
+=======
+>>>>>>> master
