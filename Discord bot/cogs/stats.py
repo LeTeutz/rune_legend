@@ -64,8 +64,6 @@ class Stats(commands.Cog):
 
             r = watcher.league.by_summoner(region, summoner['id'])
 
-            print('alo')
-
             for i in range(2):
                 try:
                     ranks[i]['queue_type'] = r[i]['queueType']
