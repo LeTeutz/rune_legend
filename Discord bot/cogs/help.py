@@ -22,6 +22,8 @@ class Help(commands.Cog):
             regions = json.load(r)
             for region in regions.items():
                 region_s += f"`{region[0]}`"+', '
+
+        region_s = region_s[:-2]
         if command == '':
             embed=discord.Embed(title="Rune Legend Help", description="Type `=help <command>` for detailed help on each command!\n", color=0xff0000)
             embed.add_field(name="`=runes`", value=f"{help_emoji} Get runes for a specified champion and/or role", inline=False)

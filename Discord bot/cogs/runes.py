@@ -19,8 +19,6 @@ class Runes(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-<<<<<<< HEAD
-=======
     @commands.Cog.listener()
     async def on_ready(self):
         pass
@@ -32,7 +30,6 @@ class Runes(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send('N-am comanda asta vere.')
 
->>>>>>> master
     def search(self, champ):
         number = 0
         with open("champions.json", "r") as f:
@@ -60,7 +57,6 @@ class Runes(commands.Cog):
 
 
     @commands.command()
-<<<<<<< HEAD
     async def runes(self, ctx, champion,* ,role = ''):
         t = time.perf_counter()
         champion = self.search(champion).replace(' ', '')
@@ -115,31 +111,6 @@ class Runes(commands.Cog):
             print(f"total t4 time pt {champion}: {t4:0.2f}")
 
 
-=======
-    async def runes(self, ctx, champion, role=''):
-        c = self.search(champion)
-        if c == 'X':
-            await ctx.send('Prea multe variante, mai baga litere')
-        elif c == '0':
-            await ctx.send('N-am gasit sa moara Garen...')
-        else:
-            await ctx.send(f'Loading runes for {c}...', delete_after=0)
-        c = Rune(c)
-        rune_list = c.rune_champ()
-        images = img.get_rune_list(rune_list)
-        i = img.generate_image(images)
-
-        with io.BytesIO() as image_binary:
-            i.save(image_binary, 'PNG')
-            image_binary.seek(0)
-            print('alo')
-            imag = discord.File(fp=image_binary, filename='rune.png')
-            embed = discord.Embed(title=f'Runes for {c.champion}', description=f'Skill order: {c.skill_order()}', color=0xffbb00)
-            embed.set_thumbnail(url=str(c.get_image()))
-            embed.set_image(url='attachment://rune.png')
-
-            await ctx.send(file=imag, embed=embed)
->>>>>>> master
 
     @commands.command(aliases=['smr'])
     async def test(self, ctx, champion, *, role = ''):
