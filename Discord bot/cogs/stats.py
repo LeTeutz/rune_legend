@@ -55,26 +55,29 @@ class Stats(commands.Cog):
         api = self.get_api()
         watcher = LolWatcher(api)
 
-        summoner = watcher.summoner.by_name(region, user)
-        icons = watcher.data_dragon.profile_icons('10.11.1')
-        thumbnail = self.summoner_icons_url + icons['data'][str(summoner['profileIconId'])]['image']['full']
+        try:
+            summoner = watcher.summoner.by_name(region, user)
+            icons = watcher.data_dragon.profile_icons('10.11.1')
+            thumbnail = self.summoner_icons_url + icons['data'][str(summoner['profileIconId'])]['image']['full']
 
-        ranks = [{}, {}]
+            ranks = [{}, {}]
 
-        r = watcher.league.by_summoner(region, summoner['id'])
+            r = watcher.league.by_summoner(region, summoner['id'])
 
-        print('alo')
+            for i in range(2):
+                try:
+                    ranks[i]['queue_type'] = r[i]['queueType']
+                    ranks[i]['tier'] = r[i]['tier']
+                    ranks[i]['rank'] = r[i]['rank']
+                except:
+                    pass
 
-        for i in range(2):
-            try:
-                ranks[i]['queue_type'] = r[i]['queueType']
-                ranks[i]['tier'] = r[i]['tier']
-                ranks[i]['rank'] = r[i]['rank']
-            except:
-                pass
+            embed = self.create_summoner_card(summoner, thumbnail, ranks)
+            await ctx.send(embed=embed)
 
-        embed = self.create_summoner_card(summoner, thumbnail, ranks)
-        await ctx.send(embed=embed)
+        except:
+            embed=discord.Embed(title="Summoner not found! <:3637_cryalot:715120331341430794>", description=f"There is nobody called `{user}` in the specified region!", color=0x018aad)
+            await ctx.send(embed=embed)
 
     @stats.error
     async def stats_error(self, ctx, error):

@@ -32,11 +32,19 @@ async def load(ctx, extension):
     print (f'loaded {extension}')
 
 
-@client.command(hidden=True)
-async def reload(ctx, extension):
-    client.unload_extension(f'cogs.{extension}')
-    client.load_extension(f'cogs.{extension}')
-    print (f'reloaded {extension}')
+@client.command(hidden=True, aliases=['r'])
+async def reload(ctx, extension=''):
+    if extension != '':
+        client.unload_extension(f'cogs.{extension}')
+        client.load_extension(f'cogs.{extension}')
+        print (f'reloaded {extension}')
+    else:
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py'):
+                client.unload_extension(f'cogs.{filename[:-3]}')
+                client.load_extension(f'cogs.{filename[:-3]}')
+                print(f'reloaded {filename}')
+
 
 @client.command(hidden=True)
 async def unload(ctx, extension):

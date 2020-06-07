@@ -19,6 +19,8 @@ class Runes(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+<<<<<<< HEAD
+=======
     @commands.Cog.listener()
     async def on_ready(self):
         pass
@@ -30,6 +32,7 @@ class Runes(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send('N-am comanda asta vere.')
 
+>>>>>>> master
     def search(self, champ):
         number = 0
         with open("champions.json", "r") as f:
