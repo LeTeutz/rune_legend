@@ -55,26 +55,31 @@ class Stats(commands.Cog):
         api = self.get_api()
         watcher = LolWatcher(api)
 
-        summoner = watcher.summoner.by_name(region, user)
-        icons = watcher.data_dragon.profile_icons('10.11.1')
-        thumbnail = self.summoner_icons_url + icons['data'][str(summoner['profileIconId'])]['image']['full']
+        try:
+            summoner = watcher.summoner.by_name(region, user)
+            icons = watcher.data_dragon.profile_icons('10.11.1')
+            thumbnail = self.summoner_icons_url + icons['data'][str(summoner['profileIconId'])]['image']['full']
 
-        ranks = [{}, {}]
+            ranks = [{}, {}]
 
-        r = watcher.league.by_summoner(region, summoner['id'])
+            r = watcher.league.by_summoner(region, summoner['id'])
 
-        print('alo')
+            print('alo')
 
-        for i in range(2):
-            try:
-                ranks[i]['queue_type'] = r[i]['queueType']
-                ranks[i]['tier'] = r[i]['tier']
-                ranks[i]['rank'] = r[i]['rank']
-            except:
-                pass
+            for i in range(2):
+                try:
+                    ranks[i]['queue_type'] = r[i]['queueType']
+                    ranks[i]['tier'] = r[i]['tier']
+                    ranks[i]['rank'] = r[i]['rank']
+                except:
+                    pass
 
-        embed = self.create_summoner_card(summoner, thumbnail, ranks)
-        await ctx.send(embed=embed)
+            embed = self.create_summoner_card(summoner, thumbnail, ranks)
+            await ctx.send(embed=embed)
+
+        except Exception as e:
+            if str(e).split(' ')[0] == '404':
+                await ctx.send('This summoner does not exist in the specified region')
 
     @stats.error
     async def stats_error(self, ctx, error):
